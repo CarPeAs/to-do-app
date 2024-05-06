@@ -55,7 +55,7 @@ function MainContent() {
   };
 
   return (
-    <main className="flex-1 overflow-y-auto bg-gray-200 p-6">
+    <main className="tareas flex-1 overflow-y-auto bg-gray-200 p-6">
     <div className="container mx-auto">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold">Tareas</h2>

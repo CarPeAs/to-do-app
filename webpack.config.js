@@ -6,7 +6,8 @@ module.exports = {
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js'
+    filename: 'bundle.js',
+    publicPath: '/'
   },
   module: {
     rules: [
@@ -25,6 +26,10 @@ module.exports = {
           'postcss-loader',
         ],
       },
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: 'asset/resource',
+      },
     ]
   },
   plugins: [
@@ -38,5 +43,6 @@ module.exports = {
     },
     compress: true,
     port: 8080,
+    historyApiFallback: true,
   }
 };
