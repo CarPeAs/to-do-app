@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-css": "npx tailwindcss -i ./src/styles.css -o ./dist/styles.css --watch",
     "start": "webpack serve --open",
-    "build": "webpack --mode production"
+    "build": "webpack --mode production",
+    "start-backend": "node src/server/app.js"
   },
   "repository": {
     "type": "git",
@@ -41,6 +42,10 @@
     "@fortawesome/fontawesome-svg-core": "^6.5.2",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "body-parser": "^1.20.2",
+    "express": "^4.19.2",
+    "mariadb": "^3.3.1",
+    "mysql2": "^3.10.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.23.0"
