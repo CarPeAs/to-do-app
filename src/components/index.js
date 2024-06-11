@@ -8,3 +8,4 @@ export { default as Documentos } from './Documentos';
 export { default as Equipos } from './Equipos';
 export { default as Proyectos } from './Proyectos';
 export { default as Configuracion } from './Configuracion';
+export { default as Login } from './Login'; 
