@@ -3,15 +3,18 @@ const bodyParser = require('body-parser');
 const userRoutes = require('./routes/users');
 const User = require('./models/User');
 const Task = require('./models/Task');
+const cors = require('cors');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(bodyParser.json());
+app.use(cors());
 
 // Routes
 app.use('/api/users', userRoutes);
+
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

@@ -1,7 +1,7 @@
 import React from 'react';
 import koalaImage from '../../img/cyber_koala.png';
 
-function Header() {
+function Header({ username, onLogout }) {
   const currentDate = new Date();
   const formattedDate = currentDate.toLocaleDateString('es-ES', {
     day: 'numeric',
@@ -14,7 +14,7 @@ function Header() {
       <span className="text-sm text-gray-700">{formattedDate}</span>
       <div className="flex items-center">
         <img src={koalaImage} alt="User" className="h-8 w-8 rounded-full object-cover" />
-        <span className="text-sm text-gray-700 ml-2">usuario@mail.com</span>
+        <span className="text-sm text-gray-700 ml-2">{username}</span>
       </div>
     </header>
   );

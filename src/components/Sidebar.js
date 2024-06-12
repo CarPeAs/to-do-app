@@ -1,9 +1,11 @@
+// src/components/Sidebar.js
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faListCheck, faUserPlus, faFile, faFolder, faCalendarDays, faGears } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faListCheck, faUserPlus, faFile, faFolder, faCalendarDays, faGears, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
-function Sidebar() {
+function Sidebar({ onLogout }) {
   return (
     <aside className="bg-pink-500 text-white w-64 space-y-6 py-7 px-2 absolute inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition duration-200 ease-in-out">
       <a href="#" className="text-white flex items-center space-x-2 px-4">
@@ -33,6 +35,11 @@ function Sidebar() {
         <Link to="/configuracion" className="py-2.5 px-4 rounded transition duration-200 hover:bg-gray-100 hover:text-pink-700 flex items-center">
           <FontAwesomeIcon icon={faGears} className="mr-2" /> Configuración
         </Link>
+      </div>
+      <div className="px-4 mt-4">
+        <button onClick={onLogout} className="py-2.5 px-4 rounded transition duration-200 hover:bg-gray-100 hover:text-pink-700 flex items-center">
+          <FontAwesomeIcon icon={faSignOutAlt} className="mr-2" /> Logout
+        </button>
       </div>
     </aside>
   );
