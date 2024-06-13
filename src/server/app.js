@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const userRoutes = require('./routes/users');
+const taskRoutes = require('./routes/tasks');
 const User = require('./models/User');
 const Task = require('./models/Task');
 const cors = require('cors');
@@ -14,6 +15,7 @@ app.use(cors());
 
 // Routes
 app.use('/api/users', userRoutes);
+app.use('/api/tasks', taskRoutes);
 
 
 app.use((err, req, res, next) => {
