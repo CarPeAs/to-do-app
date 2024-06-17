@@ -12,21 +12,27 @@ Hasta ahora, hemos implementado las siguientes tecnologías:
 - **CSS**: Estilos visuales para proporcionar una experiencia de usuario atractiva y responsiva.
 - **Tailwind CSS**: Framework de CSS para estilos rápidos y coherentes con el diseño.
 - **JavaScript**: Funciones de interactividad en el lado del cliente para manejar eventos y modificar el DOM.
+- **React**: Framework de JavaScript para construir interfaces de usuario interactivas y manejar el estado de la aplicación.
+- **Node.js y Express**: Servidor backend para manejar solicitudes y persistencia de datos.
+- **MySQL - MariaDB**: Base de datos para almacenar las tareas de forma segura y eficiente.
 
 ## Características Actuales ✅
 
 - Desarrollo de una **barra lateral estética** con navegación intuitiva.
 - Creación de una **cabecera informativa** que muestra fecha y usuario.
 - Diseño de un **sistema de tarjetas de tareas** para representar visualmente las tareas pendientes y completadas.
+- Autenticación de usuarios con **JSON Web Tokens (JWT)**.
+- **CRUD de tareas**: Crear, leer, actualizar y eliminar tareas.
 
 ## Planificación Futura 🚀
 
 Para las siguientes fases del proyecto, estamos planeando integrar:
 
-- **React**: Mejorar la interactividad y el manejo del estado de la aplicación utilizando este poderoso framework de JavaScript.
-- **Node.js y Express**: Establecer un servidor backend para manejar solicitudes y persistencia de datos.
-- **MongoDB**: Implementar una base de datos para almacenar las tareas de forma segura y eficiente.
-- **API REST**: Facilitar la comunicación entre el cliente y el servidor con una API bien estructurada.
+- Integración de un **calendario** para ver y gestionar tareas en un formato de calendario.
+- **Mejoras en la UI/UX**: Refinar el diseño y la usabilidad de la aplicación.
+- **Notificaciones y recordatorios**: Alertas para recordar a los usuarios sobre sus tareas pendientes.
+- **Colaboración en equipo**: Permitir a los usuarios compartir tareas y proyectos con otros usuarios.
+- **Informes y análisis**: Herramientas para analizar la productividad y el progreso.
 
 ## Cómo Contribuir 🤝
 
