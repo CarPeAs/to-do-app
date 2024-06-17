@@ -1,25 +1,43 @@
+// src/server/routes/tasks.js
+
 const express = require('express');
 const router = express.Router();
 const db = require('../database');
 const authenticateJWT = require('../middleware/authenticateJWT');
+const JSBI = require('jsbi');
+
+// Convert BigInt to string in the result set
+function stringifyBigInt(obj) {
+  return JSON.parse(
+    JSON.stringify(obj, (key, value) =>
+      typeof value === 'bigint' ? value.toString() : value
+    )
+  );
+}
 
 // Obtener todas las tareas
 router.get('/', authenticateJWT, async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = JSBI.BigInt(req.user.id);
     const tasks = await db.query('SELECT * FROM tasks WHERE user_id = ?', [userId]);
-    res.json(tasks);
+
+    res.json(stringifyBigInt(tasks));
+
+    // res.json(tasksFormatted);
   } catch (err) {
+    console.error("Error fetching tasks:", err.message);
     res.status(500).json({ error: err.message });
   }
 });
 
 // Obtener una tarea por ID
-router.get('/:id', async (req, res) => {
+router.get('/:id', authenticateJWT, async (req, res) => {
   try {
-    const task = await db.query('SELECT * FROM tasks WHERE id = ?', [req.params.id]);
-    res.json(task);
+    const taskId = JSBI.BigInt(req.params.id);
+    const task = await db.query('SELECT * FROM tasks WHERE id = ?', [taskId]);
+    res.json(stringifyBigInt(task));
   } catch (err) {
+    console.error("Error fetching task by ID:", err.message);
     res.status(500).json({ error: err.message });
   }
 });
@@ -27,14 +45,22 @@ router.get('/:id', async (req, res) => {
 // Crear una nueva tarea
 router.post('/', authenticateJWT, async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = JSBI.BigInt(req.user.id);
     const { title, description, status } = req.body;
     if (!title || !description || !status) {
-      return res.status(400).json({ error: 'Todos los campos son obligatorios' });
+      return res.status(400).json(stringifyBigInt({ error: 'Todos los campos son obligatorios' }));
     }
     const result = await db.query('INSERT INTO tasks (user_id, title, description, status) VALUES (?, ?, ?, ?)', [userId, title, description, status]);
-    res.status(201).json({ id: result.insertId, userId, title, description, status });
+    const newTask = {
+      id: result.insertId.toString(),
+      userId: userId.toString(),
+      title,
+      description,
+      status
+    };
+    res.status(201).json(stringifyBigInt(newTask));
   } catch (err) {
+    console.error("Error creating task:", err.message);
     res.status(500).json({ error: err.message });
   }
 });
@@ -42,43 +68,25 @@ router.post('/', authenticateJWT, async (req, res) => {
 // Actualizar una tarea
 router.put('/:id', authenticateJWT, async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = JSBI.BigInt(req.user.id);
+    const taskId = JSBI.BigInt(req.params.id);
     const { title, description, status } = req.body;
-    await db.query('UPDATE tasks SET title = ?, description = ?, status = ? WHERE id = ? AND user_id = ?', [title, description, status, req.params.id, userId]);
+    await db.query('UPDATE tasks SET title = ?, description = ?, status = ? WHERE id = ? AND user_id = ?', [title, description, status, taskId, userId]);
     res.status(204).end();
   } catch (err) {
+    console.error("Error updating task:", err.message);
     res.status(500).json({ error: err.message });
   }
 });
 
-// // Crear una nueva tarea
-// router.post('/', async (req, res) => {
-//   try {
-//     const { title, description, status } = req.body;
-//     const result = await db.query('INSERT INTO tasks (title, description, status) VALUES (?, ?, ?)', [title, description, status]);
-//     res.status(201).json({ id: result.insertId, title, description, status });
-//   } catch (err) {
-//     res.status(500).json({ error: err.message });
-//   }
-// });
-
-// // Actualizar una tarea por ID
-// router.put('/:id', async (req, res) => {
-//   try {
-//     const { title, description, status } = req.body;
-//     await db.query('UPDATE tasks SET title = ?, description = ?, status = ? WHERE id = ?', [title, description, status, req.params.id]);
-//     res.status(204).end();
-//   } catch (err) {
-//     res.status(500).json({ error: err.message });
-//   }
-// });
-
 // Eliminar una tarea por ID
-router.delete('/:id', async (req, res) => {
+router.delete('/:id',authenticateJWT, async (req, res) => {
   try {
-    await db.query('DELETE FROM tasks WHERE id = ?', [req.params.id]);
+    const taskId = JSBI.BigInt(req.params.id);
+    await db.query('DELETE FROM tasks WHERE id = ?', [taskId]);
     res.status(204).end();
   } catch (err) {
+    console.error("Error deleting task:", err.message);
     res.status(500).json({ error: err.message });
   }
 });

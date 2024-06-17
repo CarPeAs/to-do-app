@@ -50,6 +50,8 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "jsbi": "^4.3.0",
+    "json-bigint": "^1.0.0",
     "jsonwebtoken": "^9.0.2",
     "mariadb": "^3.3.1",
     "mysql2": "^3.10.0",

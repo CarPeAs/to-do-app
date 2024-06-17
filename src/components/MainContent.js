@@ -1,3 +1,5 @@
+// src/components/MainContent.js
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import IconButton from './IconButton';
@@ -31,13 +33,17 @@ function MainContent() {
     try {
       const response = await axios.post('http://localhost:3000/api/tasks', newTask, {
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
       });
-      setTasks([...tasks, response.data]);
+      console.log("New task added:", response.data);
+      // setTasks([...tasks, response.data]);
+      setTasks((prevTasks) => [...prevTasks, response.data]);
       setNewTask({ title: '', description: '', status: 'pending' });
     } catch (error) {
       console.error("Error adding task:", error);
+      alert('Error adding task: ' + (error.response?.data?.error || error.message));
     }
   };
 
@@ -66,16 +72,19 @@ function MainContent() {
     try {
       await axios.put(`http://localhost:3000/api/tasks/${task.id}`, { title, description,  status: task.status }, {
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
       });
-      const updatedTasks = tasks.map((task, i) =>
-        i === index ? { ...task, title, description } : task
+      setTasks((prevTasks) =>
+        prevTasks.map((t, i) =>
+          i === index ? { ...t, title, description } : t
+        )
       );
-      setTasks(updatedTasks);
       setEditIndex(-1);
     } catch (error) {
       console.error("Error updating task:", error);
+      alert('Error updating task: ' + (error.response?.data?.error || error.message));
     }
   };
 
@@ -110,8 +119,8 @@ function MainContent() {
           <div key={index} className={`bg-white p-4 rounded-lg shadow flex items-center justify-between ${task.status === 'completed' ? 'bg-green-100' : 'bg-red-100'}`}>
             {editIndex === index ? (
               <>
-                <input value={task.title} onChange={(e) => handleSave(index, e.target.value, task.description)} />
-                <input value={task.description} onChange={(e) => handleSave(index, task.title, e.target.value)} />
+                <input value={task.title} onChange={(e) => handleSave(index, e.target.value, task.description)} className="px-3 py-2 border rounded mr-2" />
+                <input value={task.description} onChange={(e) => handleSave(index, task.title, e.target.value)} className="px-3 py-2 border rounded mr-2" />
               </>
             ) : (
               <>
