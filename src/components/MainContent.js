@@ -66,21 +66,23 @@ function MainContent() {
     setEditIndex(index);
   };
 
-  const handleSave = async (index, title, description) => {
+  const handleChange = (index, field, value) => {
+    const updatedTasks = tasks.map((task, i) =>
+      i === index ? { ...task, [field]: value } : task
+    );
+    setTasks(updatedTasks);
+  };
+
+  const handleSave = async (index) => {
     const token = localStorage.getItem('token');
     const task = tasks[index];
     try {
-      await axios.put(`http://localhost:3000/api/tasks/${task.id}`, { title, description,  status: task.status }, {
+      await axios.put(`http://localhost:3000/api/tasks/${task.id}`, { title: task.title, description: task.description,  status: task.status }, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       });
-      setTasks((prevTasks) =>
-        prevTasks.map((t, i) =>
-          i === index ? { ...t, title, description } : t
-        )
-      );
       setEditIndex(-1);
     } catch (error) {
       console.error("Error updating task:", error);
@@ -119,8 +121,14 @@ function MainContent() {
           <div key={index} className={`bg-white p-4 rounded-lg shadow flex items-center justify-between ${task.status === 'completed' ? 'bg-green-100' : 'bg-red-100'}`}>
             {editIndex === index ? (
               <>
-                <input value={task.title} onChange={(e) => handleSave(index, e.target.value, task.description)} className="px-3 py-2 border rounded mr-2" />
-                <input value={task.description} onChange={(e) => handleSave(index, task.title, e.target.value)} className="px-3 py-2 border rounded mr-2" />
+                <input value={task.title} onChange={(e) => handleChange(index, 'title', e.target.value)} className="px-3 py-2 border rounded mr-2" />
+                <input value={task.description} onChange={(e) => handleChange(index, 'description', e.target.value)} className="px-3 py-2 border rounded mr-2" />
+                <button
+                    className="text-blue-500 hover:text-blue-700 mr-2"
+                    onClick={() => handleSave(index)}
+                  >
+                    Guardar
+                  </button>
               </>
             ) : (
               <>
