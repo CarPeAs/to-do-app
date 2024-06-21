@@ -2,7 +2,7 @@
 
 import React,{ useState, useEffect } from 'react';
 import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
-import { Header, Sidebar, Home, MainContent, Equipos, Documentos, Proyectos, Calendario, Configuracion, Login, Register  } from './components';
+import { Header, Footer, Sidebar, Home, MainContent, Equipos, Documentos, Proyectos, Calendario, Configuracion, Login, Register  } from './components';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -34,7 +34,8 @@ function App() {
   return (
     <Router>
       {user ? (
-        <div className="bg-gray-100 h-screen flex">
+        <div className="bg-gray-100 min-h-screen flex flex-col">
+          <div className="flex flex-1"> 
           <Sidebar onLogout={handleLogout} />
           <div className="flex-1 flex flex-col overflow-hidden">
             <Header username={user.username} />
@@ -50,6 +51,8 @@ function App() {
               <Route path="*" element={<Navigate to="/home" />} /> {/* Redirigir a HOME si la ruta no coincide */}
             </Routes>
           </div>
+          </div>
+          <Footer />
         </div>
       ) : (
         <Routes>
