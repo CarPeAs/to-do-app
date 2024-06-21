@@ -1,6 +1,7 @@
 // src/components/MainContent.js
 
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import IconButton from './IconButton';
 import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
@@ -8,7 +9,10 @@ import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 function MainContent() {
   const [tasks, setTasks] = useState([]);
   const [editIndex, setEditIndex] = useState(-1);
-  const [newTask, setNewTask] = useState({ title: '', description: '', status: 'pending'  });
+  const [newTask, setNewTask] = useState({ title: '', description: '', status: 'pending', due_date: '' });
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+  const dateFilter = query.get('date') || new Date().toISOString().split('T')[0];
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -19,14 +23,22 @@ function MainContent() {
             Authorization: `Bearer ${token}`
           }
         });
-        setTasks(response.data);
+        const fetchedTasks = response.data;
+        const filteredTasks = fetchedTasks.filter(task => task.due_date === dateFilter);
+        setTasks(filteredTasks);
+        // if (dateFilter) {
+        //   const filteredTasks = fetchedTasks.filter(task => task.due_date === dateFilter);
+        //   setTasks(filteredTasks);
+        // } else {
+        //   setTasks(fetchedTasks);
+        // }
       } catch (error) {
         console.error("Error fetching tasks:", error);
       }
     };
 
     fetchTasks();
-  }, []);
+  }, [dateFilter]);
 
   const addTask = async () => {
     const token = localStorage.getItem('token');
@@ -38,9 +50,8 @@ function MainContent() {
         }
       });
       console.log("New task added:", response.data);
-      // setTasks([...tasks, response.data]);
       setTasks((prevTasks) => [...prevTasks, response.data]);
-      setNewTask({ title: '', description: '', status: 'pending' });
+      setNewTask({ title: '', description: '', status: 'pending', due_date: '' });
     } catch (error) {
       console.error("Error adding task:", error);
       alert('Error adding task: ' + (error.response?.data?.error || error.message));
@@ -77,7 +88,7 @@ function MainContent() {
     const token = localStorage.getItem('token');
     const task = tasks[index];
     try {
-      await axios.put(`http://localhost:3000/api/tasks/${task.id}`, { title: task.title, description: task.description,  status: task.status }, {
+      await axios.put(`http://localhost:3000/api/tasks/${task.id}`, { title: task.title, description: task.description,  status: task.status, due_date: task.due_date  }, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -108,6 +119,11 @@ function MainContent() {
               value={newTask.description}
               onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
             />
+            <input
+              type="date"
+              value={newTask.due_date}
+              onChange={(e) => setNewTask({ ...newTask, due_date: e.target.value })}
+            />
             <button
               className="bg-pink-500 hover:bg-gray-100 text-white hover:text-pink-700 font-bold py-2 px-4 rounded-full"
               onClick={addTask}
@@ -123,6 +139,7 @@ function MainContent() {
               <>
                 <input value={task.title} onChange={(e) => handleChange(index, 'title', e.target.value)} className="px-3 py-2 border rounded mr-2" />
                 <input value={task.description} onChange={(e) => handleChange(index, 'description', e.target.value)} className="px-3 py-2 border rounded mr-2" />
+                <input type="date" value={task.due_date} onChange={(e) => handleChange(index, 'due_date', e.target.value)} className="px-3 py-2 border rounded mr-2" />
                 <button
                     className="text-blue-500 hover:text-blue-700 mr-2"
                     onClick={() => handleSave(index)}
@@ -135,6 +152,7 @@ function MainContent() {
                 <div>
                   <h3 className="font-semibold">{task.title}</h3>
                   <p className="text-gray-600">{task.description}</p>
+                  <p className="text-gray-600">Fecha: {task.due_date}</p>
                 </div>
                 <div>
                   <button className="text-blue-500 hover:text-blue-700 mr-2">Ver tarea</button>

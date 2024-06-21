@@ -46,17 +46,18 @@ router.get('/:id', authenticateJWT, async (req, res) => {
 router.post('/', authenticateJWT, async (req, res) => {
   try {
     const userId = JSBI.BigInt(req.user.id);
-    const { title, description, status } = req.body;
+    const { title, description, status, due_date } = req.body;
     if (!title || !description || !status) {
       return res.status(400).json(stringifyBigInt({ error: 'Todos los campos son obligatorios' }));
     }
-    const result = await db.query('INSERT INTO tasks (user_id, title, description, status) VALUES (?, ?, ?, ?)', [userId, title, description, status]);
+    const result = await db.query('INSERT INTO tasks (user_id, title, description, status, due_date) VALUES (?, ?, ?, ?, ?)', [userId, title, description, status, due_date]);
     const newTask = {
       id: result.insertId.toString(),
       userId: userId.toString(),
       title,
       description,
-      status
+      status,
+      due_date
     };
     res.status(201).json(stringifyBigInt(newTask));
   } catch (err) {
@@ -70,8 +71,8 @@ router.put('/:id', authenticateJWT, async (req, res) => {
   try {
     const userId = JSBI.BigInt(req.user.id);
     const taskId = JSBI.BigInt(req.params.id);
-    const { title, description, status } = req.body;
-    await db.query('UPDATE tasks SET title = ?, description = ?, status = ? WHERE id = ? AND user_id = ?', [title, description, status, taskId, userId]);
+    const { title, description, status, due_date } = req.body;
+    await db.query('UPDATE tasks SET title = ?, description = ?, status = ?, due_date = ? WHERE id = ? AND user_id = ?', [title, description, status, due_date, taskId, userId]);
     res.status(204).end();
   } catch (err) {
     console.error("Error updating task:", err.message);
