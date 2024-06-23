@@ -60,14 +60,17 @@ function Calendario() {
     <div className="calendario flex-1 overflow-y-auto bg-gray-200 p-6">
       <div className="container mx-auto">
         <h2 className="text-xl font-bold mb-4">Calendario</h2>
-        <Calendar
-          onChange={onDateChange}
-          value={date}
-          tileContent={getTileContent}
-        />
+        <div className="flex justify-center items-center bg-white p-8 rounded-lg shadow-md">
+          <Calendar
+            onChange={onDateChange}
+            value={date}
+            tileContent={getTileContent}
+            className="w-full max-w-xl"
+          />
+        </div>
       </div>
     </div>
-  ); 
+  );
 }
 
 export default Calendario;

@@ -35,22 +35,22 @@ function App() {
     <Router>
       {user ? (
         <div className="bg-gray-100 min-h-screen flex flex-col">
-          <div className="flex flex-1"> 
-          <Sidebar onLogout={handleLogout} />
-          <div className="flex-1 flex flex-col overflow-hidden">
-            <Header username={user.username} />
-            <Routes>
-              <Route path="/tareas" element={<MainContent />} />
-              <Route path="/home" element={<Home />} />
-              <Route path="/equipos" element={<Equipos />} />
-              <Route path="/documentos" element={<Documentos />} />
-              <Route path="/proyectos" element={<Proyectos />} />
-              <Route path="/calendario" element={<Calendario />} />
-              <Route path="/configuracion" element={<Configuracion />} />
-              {/* <Route path="/login" element={<Login onLogin={() => window.location.reload()} />} /> */}
-              <Route path="*" element={<Navigate to="/home" />} /> {/* Redirigir a HOME si la ruta no coincide */}
-            </Routes>
-          </div>
+          <div className="flex flex-1">
+            <Sidebar onLogout={handleLogout} />
+            <div className="flex-1 flex flex-col overflow-hidden">
+              <Header username={user.username} />
+              <Routes>
+                <Route path="/tareas" element={<MainContent />} />
+                <Route path="/home" element={<Home />} />
+                <Route path="/equipos" element={<Equipos />} />
+                <Route path="/documentos" element={<Documentos />} />
+                <Route path="/proyectos" element={<Proyectos />} />
+                <Route path="/calendario" element={<Calendario />} />
+                <Route path="/configuracion" element={<Configuracion />} />
+                {/* <Route path="/login" element={<Login onLogin={() => window.location.reload()} />} /> */}
+                <Route path="*" element={<Navigate to="/home" />} /> {/* Redirigir a HOME si la ruta no coincide */}
+              </Routes>
+            </div>
           </div>
           <Footer />
         </div>
