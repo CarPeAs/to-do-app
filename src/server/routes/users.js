@@ -5,9 +5,10 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const db = require('../database');
 const bcrypt = require('bcrypt');
+const authenticateJWT = require('../middleware/authenticateJWT');
 
 // Secret key for JWT
-const JWT_SECRET = 'your_jwt_secret_key';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 // Crear un nuevo usuario
 router.post('/', async (req, res) => {
@@ -35,13 +36,14 @@ router.post('/login', async (req, res) => {
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
-    // const isMatch = await User.comparePassword(password, user.password);
 
     if (!isMatch) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    const token = jwt.sign({ id: user.id, username: user.username, email: user.email }, JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ id: user.id, username: user.username, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    console.log('Generated token:', token);
+    res.cookie('token', token, { httpOnly: true, secure: false }); 
     res.json({ token });
   } catch (err) {
     console.error(err.message); // Debugging line
@@ -49,21 +51,21 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// Middleware to protect routes
-const authenticateJWT = (req, res, next) => {
-  const token = req.header('Authorization');
-  if (!token) {
-    return res.status(401).json({ error: 'Access denied' });
-  }
+// // Middleware to protect routes
+// const authenticateJWT = (req, res, next) => {
+//   const token = req.header('Authorization');
+//   if (!token) {
+//     return res.status(401).json({ error: 'Access denied' });
+//   }
 
-  try {
-    const verified = jwt.verify(token, JWT_SECRET);
-    req.user = verified;
-    next();
-  } catch (err) {
-    res.status(400).json({ error: 'Invalid token' });
-  }
-};
+//   try {
+//     const verified = jwt.verify(token, JWT_SECRET);
+//     req.user = verified;
+//     next();
+//   } catch (err) {
+//     res.status(400).json({ error: 'Invalid token' });
+//   }
+// };
 
 // Obtener todos los usuarios
 router.get('/', authenticateJWT, async (req, res) => {
@@ -76,7 +78,7 @@ router.get('/', authenticateJWT, async (req, res) => {
 });
 
 // Obtener un usuario por ID
-router.get('/:id', async (req, res) => {
+router.get('/:id', authenticateJWT, async (req, res) => {
   try {
     const user = await db.query('SELECT * FROM users WHERE id = ?', [req.params.id]);
     res.json(user);
@@ -85,14 +87,23 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Actualizar un usuario por ID 
-router.put('/:id', async (req, res) => {
+// Actualizar un usuario por ID
+router.put('/:id', authenticateJWT, async (req, res) => {
   try {
-    const { username, email, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-    await db.query('UPDATE users SET username = ?, email = ?, password = ? WHERE id = ?', [username, email, hashedPassword, req.params.id]);
-    res.status(204).end();
+    const { username } = req.body;
+    console.log('Received username:', username); // Debugging line
+    console.log('Request user ID:', req.user.id); // Debugging line
+
+    if (!username) {
+      return res.status(400).json({ error: 'El nombre de usuario es obligatorio' });
+    }
+    
+    const userId = req.params.id;
+    await db.query('UPDATE users SET username = ? WHERE id = ?', [username, userId]);
+
+    res.status(200).json({ message: 'Nombre de usuario actualizado correctamente' });
   } catch (err) {
+    console.error("Error updating user:", err.message);
     res.status(500).json({ error: err.message });
   }
 });

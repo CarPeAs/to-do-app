@@ -6,6 +6,11 @@ import axios from 'axios';
 import IconButton from './IconButton';
 import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
+const API = axios.create({
+  baseURL: 'http://localhost:3000',
+  withCredentials: true
+});
+
 function MainContent() {
   const [tasks, setTasks] = useState([]);
   const [editIndex, setEditIndex] = useState(-1);
@@ -18,20 +23,10 @@ function MainContent() {
     const fetchTasks = async () => {
       const token = localStorage.getItem('token');
       try {
-        const response = await axios.get('http://localhost:3000/api/tasks', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
+        const response = await API.get('/api/tasks');
         const fetchedTasks = response.data;
         const filteredTasks = fetchedTasks.filter(task => task.due_date === dateFilter);
         setTasks(filteredTasks);
-        // if (dateFilter) {
-        //   const filteredTasks = fetchedTasks.filter(task => task.due_date === dateFilter);
-        //   setTasks(filteredTasks);
-        // } else {
-        //   setTasks(fetchedTasks);
-        // }
       } catch (error) {
         console.error("Error fetching tasks:", error);
       }
@@ -41,11 +36,10 @@ function MainContent() {
   }, [dateFilter]);
 
   const addTask = async () => {
-    const token = localStorage.getItem('token');
+    
     try {
-      const response = await axios.post('http://localhost:3000/api/tasks', newTask, {
+      const response = await API.post('/api/tasks', newTask, {
         headers: {
-          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       });
@@ -59,14 +53,10 @@ function MainContent() {
   };
 
   const deleteTask = async (index) => {
-    const token = localStorage.getItem('token');
+    
     const task = tasks[index];
     try {
-      await axios.delete(`http://localhost:3000/api/tasks/${task.id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+      await API.delete(`/api/tasks/${task.id}`);
       setTasks(tasks.filter((_, i) => i !== index));
     } catch (error) {
       console.error("Error deleting task:", error);
@@ -85,12 +75,16 @@ function MainContent() {
   };
 
   const handleSave = async (index) => {
-    const token = localStorage.getItem('token');
+   
     const task = tasks[index];
     try {
-      await axios.put(`http://localhost:3000/api/tasks/${task.id}`, { title: task.title, description: task.description,  status: task.status, due_date: task.due_date  }, {
+      await API.put(`/api/tasks/${task.id}`, { 
+        title: task.title, 
+        description: task.description,  
+        status: task.status, 
+        due_date: task.due_date  
+      },{
         headers: {
-          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       });

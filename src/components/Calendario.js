@@ -4,6 +4,11 @@ import 'react-calendar/dist/Calendar.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+const API = axios.create({
+  baseURL: 'http://localhost:3000',
+  withCredentials: true
+});
+
 function Calendario() {
   const [date, setDate] = useState(new Date());
   const [tasks, setTasks] = useState([]);
@@ -11,13 +16,9 @@ function Calendario() {
   
   useEffect(() => {
     const fetchTasks = async () => {
-      const token = localStorage.getItem('token');
+      
       try {
-        const response = await axios.get('http://localhost:3000/api/tasks', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
+        const response = await await API.get('/api/tasks');
         setTasks(response.data);
       } catch (error) {
         console.error("Error fetching tasks:", error);
