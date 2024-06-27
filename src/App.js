@@ -15,7 +15,7 @@ function App() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    console.log('Token from localStorage:', token);
+    // console.log('Token from localStorage:', token);
     if (token) {
       try { 
         const user = JSON.parse(atob(token.split('.')[1])); // Decodifica el token JWT para obtener la información del usuario
@@ -30,7 +30,7 @@ function App() {
     try {
       const response = await API.post('/api/users/login', { email, password });
       const token = response.data.token;
-      console.log('Received token:', token); // Verificar que el token se recibe correctamente
+      // console.log('Received token:', token); // Verificar que el token se recibe correctamente
       if (token) {
         localStorage.setItem('token', token);
         const user = JSON.parse(atob(token.split('.')[1]));
@@ -50,7 +50,7 @@ function App() {
   const handleLogout = () => {
     localStorage.removeItem('token');
     setUser(null);
-    window.location.reload(); // Recarga la página para redirigir al login
+    window.location.reload();
   };
 
   return (

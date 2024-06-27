@@ -21,12 +21,17 @@ function MainContent() {
 
   useEffect(() => {
     const fetchTasks = async () => {
-      const token = localStorage.getItem('token');
+      // const token = localStorage.getItem('token');
       try {
         const response = await API.get('/api/tasks');
         const fetchedTasks = response.data;
-        const filteredTasks = fetchedTasks.filter(task => task.due_date === dateFilter);
-        setTasks(filteredTasks);
+        // console.log('Fetched tasks:', fetchedTasks);
+        if (Array.isArray(fetchedTasks)) {
+          const filteredTasks = fetchedTasks.filter(task => task.due_date === dateFilter);
+          setTasks(filteredTasks);
+        } else {
+          console.error('Fetched tasks is not an array:', fetchedTasks);
+        }
       } catch (error) {
         console.error("Error fetching tasks:", error);
       }
