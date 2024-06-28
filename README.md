@@ -23,16 +23,31 @@ Hasta ahora, hemos implementado las siguientes tecnologías:
 - Diseño de un **sistema de tarjetas de tareas** para representar visualmente las tareas pendientes y completadas.
 - Autenticación de usuarios con **JSON Web Tokens (JWT)**.
 - **CRUD de tareas**: Crear, leer, actualizar y eliminar tareas.
+- **CRUD de usuarios**: Crear, leer, actualizar y eliminar datos de usuarios.
+- **Integración de un calendario**: Visualiza tus eventos y tareas en un formato de calendario.
+
+### Capturas de Pantalla
+
+#### Vista de Tareas
+<img src="img/cap4.png" alt="Vista de Tareas" width="500" style="display: block; margin: auto;" />
+
+#### Calendario de Tareas
+<img src="img/cap2.png" alt="Vista de Tareas" width="400" style="display: block; margin: auto;" />
+
+
+#### Edición datos usuario
+<img src="img/cap3.png" alt="Vista de Tareas" width="400" style="display: block; margin: auto;" />
 
 ## Planificación Futura 🚀
 
-Para las siguientes fases del proyecto, estamos planeando integrar:
+Algunas futuras mejoras podrían ser:
 
-- Integración de un **calendario** para ver y gestionar tareas en un formato de calendario.
 - **Mejoras en la UI/UX**: Refinar el diseño y la usabilidad de la aplicación.
 - **Notificaciones y recordatorios**: Alertas para recordar a los usuarios sobre sus tareas pendientes.
 - **Colaboración en equipo**: Permitir a los usuarios compartir tareas y proyectos con otros usuarios.
 - **Informes y análisis**: Herramientas para analizar la productividad y el progreso.
+- **Pruebas unitarias y de integración**: Implementar Jest y React Testing Library para asegurar la calidad del código.
+- **Perfil de Administrador**: Crear, leer, actualizar y eliminar usuarios y tareas con permisos de administrador.
 
 ## Cómo Contribuir 🤝
 

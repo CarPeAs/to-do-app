@@ -95,28 +95,5 @@ footer a:hover {
   aside {
     @apply transform-none;
   }
-
-  .home-container {
-    margin-left: 16rem;
-  }
 }
 
-.home-container {
-  @apply flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4;
-}
-
-.home-container h1 {
-  @apply text-4xl font-bold mb-8 text-center;
-}
-
-.home-container .grid {
-  @apply grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-6xl;
-}
-
-.home-container .group div {
-  @apply p-6 rounded-lg shadow-lg transform transition-transform flex flex-col justify-center items-center h-48;
-}
-
-.home-container .group div:hover {
-  @apply scale-105;
-}
