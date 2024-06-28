@@ -48,7 +48,7 @@ function MainContent() {
           'Content-Type': 'application/json'
         }
       });
-      console.log("New task added:", response.data);
+      // console.log("New task added:", response.data);
       setTasks((prevTasks) => [...prevTasks, response.data]);
       setNewTask({ title: '', description: '', status: 'pending', due_date: '' });
     } catch (error) {
@@ -100,6 +100,25 @@ function MainContent() {
     }
   };
 
+  const toggleTaskStatus = async (index) => {
+    const task = tasks[index];
+    const newStatus = task.status === 'pending' ? 'completed' : 'pending';
+    try {
+      await API.put(`/api/tasks/${task.id}`, { 
+        ...task, 
+        status: newStatus 
+      },{
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      setTasks(tasks.map((t, i) => i === index ? { ...t, status: newStatus } : t));
+    } catch (error) {
+      console.error("Error toggling task status:", error);
+      alert('Error toggling task status: ' + (error.response?.data?.error || error.message));
+    }
+  };
+
   return (
     <main className="tareas flex-1 overflow-y-auto bg-gray-200 p-6">
     <div className="container mx-auto">
@@ -108,13 +127,13 @@ function MainContent() {
         <div>
             <input
               type="text"
-              placeholder="Título de la nueva tarea"
+              placeholder="Título tarea"
               value={newTask.title}
               onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
             />
             <input
               type="text"
-              placeholder="Descripción de la nueva tarea"
+              placeholder="Descripción tarea"
               value={newTask.description}
               onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
             />
@@ -133,7 +152,10 @@ function MainContent() {
       </div>
       <div className="space-y-4">
         {tasks.map((task, index) => (
-          <div key={index} className={`bg-white p-4 rounded-lg shadow flex items-center justify-between ${task.status === 'completed' ? 'bg-green-100' : 'bg-red-100'}`}>
+          <div key={index} 
+          className={`bg-white p-4 rounded-lg shadow flex items-center justify-between ${task.status === 'completed' ? 'bg-green-100' : 'bg-red-100'}`}
+          onClick={() => toggleTaskStatus(index)}
+          >
             {editIndex === index ? (
               <>
                 <input value={task.title} onChange={(e) => handleChange(index, 'title', e.target.value)} className="px-3 py-2 border rounded mr-2" />

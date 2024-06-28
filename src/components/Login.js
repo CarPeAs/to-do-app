@@ -19,10 +19,10 @@ function Login({ onLogin }) {
     try {
       const response = await axios.post('http://localhost:3000/api/users/login', { email, password });
       const token = response.data.token;
-      console.log('Received token:', token); // Verificar que el token se recibe correctamente
+      // console.log('Received token:', token); // Verificar que el token se recibe correctamente
       if (token) {
         localStorage.setItem('token', token);
-        console.log('Token stored:', token);
+        // console.log('Token stored:', token);
         onLogin(email, password);
         navigate('/home');
       } else {
